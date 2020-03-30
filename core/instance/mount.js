@@ -1,6 +1,8 @@
 import VNode from '../vdom/vnode.js'
 import {prepareRender, getTemplate2VnodeMap, getVnode2TemplateMap} from './render.js'
 import {vmodel} from './grammer/vmodel.js'
+import {vforInit} from './grammer/vfor.js'
+import {mergeAttr} from '../util/ObjectUtil.js' 
 
 export function initMount(Due) {
 	Due.prototype.Smount = function (el) {
@@ -21,14 +23,20 @@ export function mount(vm, elm) {
 }
 
 function constructVNode(vm, elm, parent) {//深度优先搜索
-	analysisAttr(vm, elm, parent)
-	let vnode = null
-	let children = []
-	let text = getNodeText(elm)
-	let data = null
-	let nodeType = elm.nodeType
-	let tag = elm.nodeName
-	vnode = new VNode(tag, elm, children, text, data, parent, nodeType)
+	let vnode = analysisAttr(vm, elm, parent)
+	if (vnode == null) {
+		let children = []
+		let text = getNodeText(elm)
+		let data = null
+		let nodeType = elm.nodeType
+		let tag = elm.nodeName
+		vnode = new VNode(tag, elm, children, text, data, parent, nodeType)
+		if (elm.nodeType == 1 && elm.getAttribute('env')) {
+			vnode.env = mergeAttr(vnode.env, JSON.parse(elm.getAttribute('env')))
+		} else {
+			vnode.env = mergeAttr(vnode.env, parent ? parent.env : {})
+		}
+	}
 
 	let childs = vnode.elm.childNodes
 	for (let i = 0; i < childs.length; i++) {
@@ -57,6 +65,9 @@ function analysisAttr(vm, elm, parent) {
 		// console.log(attrNames)
 		if (attrNames.indexOf("v-model") > -1) {
 			vmodel(vm, elm, elm.getAttribute('v-model'))
+		}
+		if (attrNames.indexOf('v-for') > -1) {
+			return vforInit(vm, elm, parent, elm.getAttribute('v-for'))
 		}
 	}
 }

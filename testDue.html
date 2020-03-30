@@ -11,9 +11,15 @@
 		{{obj.name}}
 		{{obj.x}} <br>
 		<input type="text" v-model="obj.name" name="">
-		<li v-for="{key} in list">
-			{{key.a}}
-		</li>
+		<ul>
+			<li v-for="{key} in list">
+				姓名: {{key.a}}
+				年龄: {{key.b}}
+				<!-- <p v-for="(temp) in key.list">
+					{{temp.a}}
+				</p> -->
+			</li>
+		</ul>
 	</div>
 
 	<script type="module">
@@ -30,11 +36,27 @@
 				list: [
 					{
 						a: 'panda',
-						b: 23
+						b: 23,
+						list: [
+							{
+								a: 'aa'
+							},
+							{
+								a: 'bb'
+							}
+						]
 					},
 					{
 						a: 'mokey',
-						b:  20
+						b:  20,
+						list: [
+							{
+								a: 'cc'
+							},
+							{
+								a: 'dd'
+							}
+						]
 					}
 				]
 			}
