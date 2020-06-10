@@ -1,5 +1,5 @@
 import VNode from '../vdom/vnode.js'
-import {prepareRender, getTemplate2VnodeMap, getVnode2TemplateMap} from './render.js'
+import {prepareRender, getTemplate2VnodeMap, getVnode2TemplateMap, getVNodeByTemplate, clearMap, renderNode} from './render.js'
 import {vmodel} from './grammer/vmodel.js'
 import {vforInit} from './grammer/vfor.js'
 import {mergeAttr} from '../util/ObjectUtil.js' 
@@ -38,12 +38,13 @@ function constructVNode(vm, elm, parent) {//深度优先搜索
 		}
 	}
 
-	let childs = vnode.elm.childNodes
+	// let childs = vnode.elm.childNodes
+	let childs = vnode.nodeType == 0 ? vnode.parent.elm.childNodes : vnode.elm.childNodes
 	for (let i = 0; i < childs.length; i++) {
 		let childNodes = constructVNode(vm, childs[i], vnode)
-		if (childNodes instanceof VNode) {
+		if (childNodes instanceof VNode) { //返回单一节点的时候
 			vnode.children.push(childNodes)
-		} else {
+		} else { //返回节点数组的时候
 			vnode.children = vnode.children.cocat(childNodes)
 		}
 	}
@@ -69,5 +70,19 @@ function analysisAttr(vm, elm, parent) {
 		if (attrNames.indexOf('v-for') > -1) {
 			return vforInit(vm, elm, parent, elm.getAttribute('v-for'))
 		}
+	}
+}
+
+export function rebuild(vm, template) {
+	let virtualNode = getVNodeByTemplate(template);
+
+	for (let i = 0; i < virtualNode.length; i++) {
+		virtualNode[i].parent.elm.innerHTML = ""
+		virtualNode[i].parent.elm.appendChild(virtualNode[i].elm);
+		let result = constructVNode(vm, virtualNode[i].elm, virtualNode[i].parent)
+		virtualNode[i].parent.children = [result]
+		clearMap()
+		prepareRender(vm, vm._vnode)
+		// renderNode(vm, vm._vnode);
 	}
 }

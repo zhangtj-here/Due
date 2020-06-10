@@ -55,6 +55,8 @@ export function renderNode(vm, vnode) {
 	}
 }
 
+
+// 给文本节点和模板字符串建立映射
 export function prepareRender(vm, vnode) {
 	if (vnode == null) {
 		return;
@@ -62,13 +64,18 @@ export function prepareRender(vm, vnode) {
 	if (vnode.nodeType == 3) {//是个文本节点
 		analysisTemplateString(vnode)
 	}
+
+	if (vnode.nodeType == 0) {
+		setTemplate2Vnode(vnode.data, vnode);
+		setVnode2Template(vnode.data, vnode);
+	}
 	analysisAttr(vm, vnode)
 	//nodeType == 1 表示标签
-	if (vnode.nodeType == 1) {
+	// if (vnode.nodeType == 1) {
 		for (let i = 0; i < vnode.children.length; i++) {
 			prepareRender(vm, vnode.children[i])
 		}
-	}
+	// }
 }
 
 function analysisTemplateString(vnode) {
@@ -136,4 +143,17 @@ function analysisAttr(vm, vnode) {
 		setTemplate2Vnode(vnode.elm.getAttribute('v-model'), vnode)
 		setVnode2Template(vnode.elm.getAttribute('v-model'), vnode)
 	}
+	// if (attrNames.indexOf('v-for') > -1) {
+	// 	setTemplate2Vnode(vnode.elm.getAttribute('v-for'), vnode)
+	// 	setVnode2Template(vnode.elm.getAttribute('v-for'), vnode)
+	// }
+}
+
+export function getVNodeByTemplate(template) {
+	return template2Vnode.get(template)
+}
+
+export function clearMap() {
+	template2Vnode.clear();
+	vnode2Template.clear();
 }

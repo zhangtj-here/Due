@@ -15,9 +15,9 @@
 			<li v-for="{key} in list">
 				姓名: {{key.a}}
 				年龄: {{key.b}}
-				<!-- <p v-for="(temp) in key.list">
-					{{temp.a}}
-				</p> -->
+<!--				 <p v-for="(temp) in key.list1">-->
+<!--					{{temp.a}}-->
+<!--				</p>-->
 			</li>
 		</ul>
 	</div>
@@ -31,13 +31,14 @@
 				description: "panda say hello",
 				obj: {
 					name: 'pig',
-					age: 1
+					age: 1,
+					x: 123
 				},
 				list: [
 					{
 						a: 'panda',
 						b: 23,
-						list: [
+						list1: [
 							{
 								a: 'aa'
 							},
@@ -49,7 +50,7 @@
 					{
 						a: 'mokey',
 						b:  20,
-						list: [
+						list1: [
 							{
 								a: 'cc'
 							},

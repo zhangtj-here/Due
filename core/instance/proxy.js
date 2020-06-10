@@ -1,4 +1,5 @@
 import {renderData} from './render.js'
+import {rebuild} from './mount.js'
 
 function constructObjectProxy(vm, obj, namespace) {
 	let proxyObj = {}
@@ -43,7 +44,9 @@ function defArrayFunc(obj, func, namespace, vm) {
 		value: function (...args) {
 			let original = arrayProto[func]
 			const result = original.apply(this, args)
-			console.log(getNameSpace(namespace, ""))
+			// console.log(getNameSpace(namespace, ""))
+			rebuild(vm, getNameSpace(namespace, ""))
+			renderData(vm, getNameSpace(namespace, ""))
 			return result
 		}
 	})
@@ -88,12 +91,11 @@ export function constructProxy(vm, obj, namespace) { //vm代表due对象，obj�
 	// 递归
 	let proxyObj = null
 	if (obj instanceof Array) { //判断这个对象是否为数组
-		let proxyObj = new Array(obj.length)
+		proxyObj = new Array(obj.length)
 		for (let i = 0,len = obj.lenth; i < len; i++) {
 			proxyObj[i] = constructProxy(vm, obj[i], namespace)
 		}
 		proxyObj = constructArrayProxy(vm, obj, namespace)
-		return proxyObj
 	} else if (obj instanceof Object) { //判断这个对象是否为对象
 		proxyObj = constructObjectProxy(vm, obj, namespace)
 	} else {
