@@ -3,6 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<style>
+		.red {
+			color: red;
+			font-size: 20px;
+		}
+		.blue {
+			color: blueviolet;
+		}
+	</style>
 </head>
 <body>
 	<div id="test">
@@ -20,6 +29,12 @@
 <!--				</p>-->
 			</li>
 		</ul>
+
+<!--		<img v-bind:src="imgSrc" alt="暂无图片">-->
+		<br>
+		<span :class="haha">小猪佩奇</span>
+		<br>
+		<span :class="{red: obj.x > 2, blue: obj.x > 2}">喜洋洋</span>
 	</div>
 
 	<script type="module">
@@ -59,7 +74,9 @@
 							}
 						]
 					}
-				]
+				],
+				imgSrc: "a.jpg",
+				haha: "red"
 			}
 		})
 		// console.log(test)

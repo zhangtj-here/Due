@@ -73,7 +73,7 @@ function cloneObject(obj) {
 	let result = {}
 	let names = Object.getOwnPropertyNames(obj)
 	for (let i = 0; i < names.length; i++) {
-		result[[names][i]] = clone(obj[names[i]])
+		result[names[i]] = clone(obj[names[i]])
 	}
 	return result
 }
@@ -84,4 +84,12 @@ function cloneArray(obj) {
 		result[i] = clone(obj[i])
 	}
 	return result
+}
+
+
+
+export function getEnvAttr(vm, vnode) {
+	let result = mergeAttr(vm._data, vnode.env)
+	result = mergeAttr(result, vm._computed)
+	return result;
 }

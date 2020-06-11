@@ -3,6 +3,7 @@ import {prepareRender, getTemplate2VnodeMap, getVnode2TemplateMap, getVNodeByTem
 import {vmodel} from './grammer/vmodel.js'
 import {vforInit} from './grammer/vfor.js'
 import {mergeAttr} from '../util/ObjectUtil.js' 
+import {checkVBind} from './grammer/vbind.js'
 
 export function initMount(Due) {
 	Due.prototype.Smount = function (el) {
@@ -38,6 +39,7 @@ function constructVNode(vm, elm, parent) {//深度优先搜索
 		}
 	}
 
+	checkVBind(vm, vnode)
 	// let childs = vnode.elm.childNodes
 	let childs = vnode.nodeType == 0 ? vnode.parent.elm.childNodes : vnode.elm.childNodes
 	for (let i = 0; i < childs.length; i++) {
