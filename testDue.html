@@ -19,7 +19,7 @@
 		<span>{{description}}</span><br/>
 		{{obj.name}}
 		{{obj.x}} <br>
-		<input type="text" v-model="obj.name" name="">
+		<input type="text" v-model="obj.name" v-on:keydown="enter" name="">
 		<ul>
 			<li v-for="{key} in list">
 				姓名: {{key.a}}
@@ -77,6 +77,11 @@
 				],
 				imgSrc: "a.jpg",
 				haha: "red"
+			},
+			methods: {
+				enter: function () {
+					console.log("hello", this)
+				}
 			}
 		})
 		// console.log(test)

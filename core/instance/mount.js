@@ -4,6 +4,7 @@ import {vmodel} from './grammer/vmodel.js'
 import {vforInit} from './grammer/vfor.js'
 import {mergeAttr} from '../util/ObjectUtil.js' 
 import {checkVBind} from './grammer/vbind.js'
+import {checkVOn} from "./grammer/von.js";
 
 export function initMount(Due) {
 	Due.prototype.Smount = function (el) {
@@ -19,8 +20,8 @@ export function mount(vm, elm) {
 	vm._vnode = constructVNode(vm, elm, null)
 	// 进行预备渲染(建立渲染索引，通过模板找vnode,通过vnode找模板)
 	prepareRender(vm, vm._vnode);
-	console.log(getTemplate2VnodeMap())
-	console.log(getVnode2TemplateMap())
+	// console.log(getTemplate2VnodeMap())
+	// console.log(getVnode2TemplateMap())
 }
 
 function constructVNode(vm, elm, parent) {//深度优先搜索
@@ -40,6 +41,7 @@ function constructVNode(vm, elm, parent) {//深度优先搜索
 	}
 
 	checkVBind(vm, vnode)
+	checkVOn(vm, vnode)
 	// let childs = vnode.elm.childNodes
 	let childs = vnode.nodeType == 0 ? vnode.parent.elm.childNodes : vnode.elm.childNodes
 	for (let i = 0; i < childs.length; i++) {
