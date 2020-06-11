@@ -1,5 +1,6 @@
 import {renderData} from './render.js'
 import {rebuild} from './mount.js'
+import {getValue} from "../util/ObjectUtil.js";
 
 function constructObjectProxy(vm, obj, namespace) {
 	let proxyObj = {}
@@ -13,7 +14,13 @@ function constructObjectProxy(vm, obj, namespace) {
 			set (newValue) {
 				console.log(getNameSpace(namespace, prop))
 				obj[prop] = newValue
-				renderData(vm, getNameSpace(namespace, prop))
+				let val = getValue(vm._data, getNameSpace(namespace, prop))
+				if (val instanceof Array) {
+					rebuild(vm, getNameSpace(namespace, prop))
+					renderData(vm, getNameSpace(namespace, prop))
+				} else {
+					renderData(vm, getNameSpace(namespace, prop))
+				}
 			}
 		})
 		Object.defineProperty(vm, prop, {
